@@ -34,6 +34,7 @@ import ManagedIndices from "../ManagedIndices";
 import Indices from "../Indices";
 import CreatePolicy from "../CreatePolicy";
 import ChangePolicy from "../ChangePolicy";
+import PolicyDetails from "../PolicyDetails/containers/PolicyDetails";
 import Rollups from "../Rollups";
 import { ModalProvider, ModalRoot } from "../../components/Modal";
 import { ServicesConsumer } from "../../services";
@@ -126,7 +127,8 @@ export default class Main extends Component<MainProps, object> {
                         pathname != ROUTES.ROLLUP_DETAILS &&
                         pathname != ROUTES.CREATE_TRANSFORM &&
                         pathname != ROUTES.EDIT_TRANSFORM &&
-                        pathname != ROUTES.TRANSFORM_DETAILS && (
+                        pathname != ROUTES.TRANSFORM_DETAILS &&
+                        pathname != ROUTES.POLICY_DETAILS && (
                           <EuiPageSideBar style={{ minWidth: 150 }}>
                             <EuiSideNav style={{ width: 150 }} items={sideNav} />
                           </EuiPageSideBar>
@@ -160,6 +162,14 @@ export default class Main extends Component<MainProps, object> {
                             render={(props: RouteComponentProps) => (
                               <div style={{ padding: "25px 25px" }}>
                                 <Policies {...props} policyService={services.policyService} />
+                              </div>
+                            )}
+                          />
+                          <Route
+                            path={ROUTES.POLICY_DETAILS}
+                            render={(props: RouteComponentProps) => (
+                              <div style={{ padding: "25px 25px" }}>
+                                <PolicyDetails {...props} policyService={services.policyService} />
                               </div>
                             )}
                           />

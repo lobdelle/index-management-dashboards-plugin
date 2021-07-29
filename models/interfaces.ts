@@ -94,6 +94,14 @@ export interface Policy {
   default_state: string;
   states: State[];
   ism_template: any;
+  error_notification: string;
+  last_updated_time: string;
+  schema_version: number;
+}
+
+export interface ISMTemplate {
+  index_patterns: string[];
+  priority: number;
 }
 
 export interface State {
