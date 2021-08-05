@@ -23,23 +23,44 @@ interface PolicySettingsProps {
   description: string;
   sequenceNumber: number;
   schemaVersion: number;
-  ismTemplate: ISMTemplate;
+  ismTemplates: ISMTemplate[];
 }
 
-export default class PolicySettings extends Component<PolicySettingsProps> {
+interface PolicySettingsState {
+  pageIndex: number;
+  pageSize: number;
+  showPerPageOptions: boolean;
+}
+
+export default class PolicySettings extends Component<PolicySettingsProps, PolicySettingsState> {
   constructor(props: PolicySettingsProps) {
     super(props);
+
+    this.state = {
+      pageIndex: 0,
+      pageSize: 10,
+      showPerPageOptions: true,
+    }
   }
 
   // TODO: Needs to be updated to handle template array
-  getTemplates = (ismTemplate: ISMTemplate): object[] => {
+  getTemplates = (ismTemplates: ISMTemplate[]): object[] => {
     const templateArray = [];
-    templateArray.push({
-      indexPatterns: ismTemplate.index_patterns,
-      priority: ismTemplate.priority,
+    ismTemplates.map((ismTemplate)=> {
+      templateArray.push({
+        indexPatterns: ismTemplate.index_patterns,
+        priority: ismTemplate.priority,
+      })
     })
     return templateArray;
   }
+
+  onTableChange = ({ page = {} }) => {
+    const { index: pageIndex, size: pageSize } = page;
+
+    this.setState({pageIndex: pageIndex});
+    this.setState({pageSize: pageSize});
+  };
 
   render() {
     const {
@@ -50,8 +71,14 @@ export default class PolicySettings extends Component<PolicySettingsProps> {
       description,
       sequenceNumber,
       schemaVersion,
-      ismTemplate,
+      ismTemplates,
     } = this.props;
+
+    const {
+      pageIndex,
+      pageSize,
+      showPerPageOptions,
+    } = this.state;
 
     const updatedDate = new Date(lastUpdated);
 
@@ -67,7 +94,7 @@ export default class PolicySettings extends Component<PolicySettingsProps> {
         truncateText: false
       }
     ]
-    const items = this.getTemplates(ismTemplate);
+    const items = this.getTemplates(ismTemplates);
 
     const infoItems = [
       { term: "Policy name", value: policyId },
@@ -78,6 +105,14 @@ export default class PolicySettings extends Component<PolicySettingsProps> {
       { term: "Sequence number", value: sequenceNumber },
       { term: "Schema version", value: schemaVersion },
     ];
+
+    const pagination = {
+      pageIndex: pageIndex,
+      pageSize,
+      totalItemCount: ismTemplates.length,
+      pageSizeOptions: [10, 20, 50],
+      hidePerPageOptions: !showPerPageOptions,
+    };
 
     return(
       <ContentPanel
@@ -124,6 +159,8 @@ export default class PolicySettings extends Component<PolicySettingsProps> {
             <EuiBasicTable
               items={items}
               columns={columns}
+              pagination={pagination}
+              onChange={this.onTableChange}
             />
           </ContentPanel>
         </div>

@@ -36,6 +36,7 @@ import { parseTimeunit } from "../../../CreateRollup/utils/helpers"; // maybe ne
 import { ISMTemplate } from "../../../../../models/interfaces";
 import { CoreServicesContext } from "../../../../components/core_services";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
+import States from "../../../NewCreatePolicy/components/States";
 
 interface PolicyDetailsProps extends RouteComponentProps {
   policyService: PolicyService;
@@ -49,7 +50,7 @@ interface PolicyDetailsState {
   description: string;
   sequenceNumber: number;
   schemaVersion: number;
-  ismTemplate: ISMTemplate;
+  ismTemplates: ISMTemplate[];
 
   isJSONModalOpen: boolean;
   policyJSON: any;
@@ -70,10 +71,10 @@ export default class PolicyDetails extends Component<PolicyDetailsProps,
         description: "",
         sequenceNumber: -1,
         schemaVersion: -1,
-        ismTemplate: {} as ISMTemplate,
+        ismTemplates: [],
 
         isJSONModalOpen: false,
-        policyJSON: "",
+        policyJSON: {policy:{states:[]}},
         isDeleteModalVisible: false,
       };
     }
@@ -111,7 +112,7 @@ export default class PolicyDetails extends Component<PolicyDetailsProps,
             schemaVersion: response.response.policy.schema_version,
           })
           if (response.response.policy.ism_template) {
-            this.setState({ismTemplate: response.response.policy.ism_template,});
+            this.setState({ismTemplates: response.response.policy.ism_template,});
           }
         }
       } catch (err) {
@@ -160,7 +161,7 @@ export default class PolicyDetails extends Component<PolicyDetailsProps,
         description,
         sequenceNumber,
         schemaVersion,
-        ismTemplate,
+        ismTemplates,
         isJSONModalOpen,
         policyJSON,
         isDeleteModalVisible,
@@ -204,9 +205,16 @@ export default class PolicyDetails extends Component<PolicyDetailsProps,
             description={description}
             sequenceNumber={sequenceNumber}
             schemaVersion={schemaVersion}
-            ismTemplate={ismTemplate}
+            ismTemplates={ismTemplates}
           />
           <EuiSpacer />
+          <States
+            onOpenFlyout={() => {}}
+            onClickEditState={() => {}}
+            policy={policyJSON.policy}
+            onClickDeleteState={() => {}}
+            isReadOnly={true}
+          />
 
           {isJSONModalOpen && (
             <EuiOverlayMask>
