@@ -24,7 +24,6 @@ import {
   EuiModalHeaderTitle,
   EuiModalBody,
   EuiCodeBlock,
-  EuiHealth,
 } from "@elastic/eui";
 import { RouteComponentProps } from "react-router-dom";
 import queryString from "query-string";
@@ -32,7 +31,6 @@ import { PolicyService } from "../../../../services";
 import { BREADCRUMBS, ROUTES } from "../../../../utils/constants";
 import { getErrorMessage } from "../../../../utils/helpers";
 import PolicySettings from "../../components/PolicySettings/PolicySettings";
-import { parseTimeunit } from "../../../CreateRollup/utils/helpers"; // maybe need
 import { ISMTemplate } from "../../../../../models/interfaces";
 import { CoreServicesContext } from "../../../../components/core_services";
 import DeleteModal from "../../components/DeleteModal/DeleteModal";
